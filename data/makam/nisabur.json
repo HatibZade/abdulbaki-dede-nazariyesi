@@ -1,0 +1,25 @@
+{
+  "Sinif": "Makam",
+  "Ad": "Nişabur",
+  "Agaz": "neva perdesi veya civarından âgâz eder",
+  "Karar": "buselik perdesinde karar eder",
+  "NazariSeyir": [
+    "neva",
+    "hüseynî",
+    "neva",
+    "hicaz",
+    "buselik"
+  ],
+  "SusleyenPerdeler": [
+    "dügâh",
+    "acem",
+    "gerdâniyye",
+    "muhayyer",
+    "tiz segâh",
+    "tiz buselik"
+  ],
+  "EskiAdi": [
+    "—"
+  ],
+  "Not": "—"
+}

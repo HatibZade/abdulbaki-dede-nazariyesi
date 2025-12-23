@@ -1,0 +1,29 @@
+{
+  "Sinif": "Makam",
+  "Ad": "Suz-i Dilâra",
+  "Agaz": "buselik perdesi veya civarından âgâz eder",
+  "Karar": "rast perdesinde karar eder",
+  "NazariSeyir": [
+    "buselik",
+    "çargâh",
+    "buselik",
+    "dügâh",
+    "rast",
+    "geveşt",
+    "rast"
+  ],
+  "SusleyenPerdeler": [
+    "yegâh",
+    "aşîrân",
+    "ırak",
+    "neva",
+    "hüseynî",
+    "acem",
+    "gerdâniyye",
+    "muhayyer"
+  ],
+  "EskiAdi": [
+    "—"
+  ],
+  "Not": "—"
+}

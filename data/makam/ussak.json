@@ -1,0 +1,23 @@
+{
+  "Sinif": "Makam",
+  "Ad": "Uşşak",
+  "Agaz": "neva perdesi veya civarından âgâz eder",
+  "Karar": "dügâh perdesinde karar eder",
+  "NazariSeyir": [
+    "neva",
+    "çargâh",
+    "segâh",
+    "dügâh"
+  ],
+  "SusleyenPerdeler": [
+    "rast",
+    "hüseynî",
+    "acem",
+    "gerdâniyye",
+    "muhayyer"
+  ],
+  "EskiAdi": [
+    "Nevrûz-ı asl"
+  ],
+  "Not": "—"
+}

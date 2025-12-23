@@ -1,0 +1,24 @@
+{
+  "Sinif": "Makam",
+  "Ad": "Irak",
+  "Agaz": "dügâh perdesi veya civarından âgâz eder",
+  "Karar": "ırak perdesinde karar eder",
+  "NazariSeyir": [
+    "dügâh",
+    "rast",
+    "ırak"
+  ],
+  "SusleyenPerdeler": [
+    "yegâh",
+    "aşîrân",
+    "segâh",
+    "çargâh",
+    "neva",
+    "hüseynî",
+    "evc"
+  ],
+  "EskiAdi": [
+    "—"
+  ],
+  "Not": "Bunda hilâf-ı dâ’ire ile hüseynî perdesi yerine hisâr perdesi ahzı vardır."
+}

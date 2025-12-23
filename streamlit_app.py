@@ -1,11 +1,22 @@
 import streamlit as st
 import json
 import os
-from pathlib import Path
+import unicodedata
+import re
 
 st.set_page_config(page_title="Nasır Dede – Tedkîk u Tahkîk", layout="wide")
 
 # ---------- Helpers ----------
+def norm(s: str) -> str:
+    if s is None:
+        return ""
+    s = str(s).lower()
+    s = s.replace("ı","i").replace("İ","i").replace("I","i")
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(ch for ch in s if not unicodedata.combining(ch))
+    s = re.sub(r"[^a-z0-9 _-]+", "", s)
+    return s.strip()
+
 def find_dir_case_insensitive(target_name: str):
     target_lower = target_name.lower()
     for root, dirs, _files in os.walk(os.getcwd()):
@@ -92,11 +103,7 @@ def render_terkib(data: dict):
 # ---------- Header ----------
 st.title("Abdülbaki Nasır Dede – Tedkîk u Tahkîk")
 st.caption("17’li sistem · Makam & Terkib veri seti")
-
-st.markdown(
-    "Bu sayfa, veri setini **normal web sitesi gibi** (başlık başlık) görüntüler. "
-    "Ham JSON yalnızca isteğe bağlı olarak açılır."
-)
+st.markdown("Bu sayfa, veri setini **normal web sitesi gibi** (başlık başlık) görüntüler. Ham JSON yalnızca isteğe bağlı olarak açılır.")
 
 # ---------- Sidebar (Advanced) ----------
 auto_makam_dir = find_dir_case_insensitive("makam")
@@ -106,10 +113,6 @@ with st.sidebar.expander("Gelişmiş · Veri yolu", expanded=False):
     makam_dir = st.text_input("Makam klasörü", value=auto_makam_dir or "data/makam", help="Örn: data/makam")
     terkib_dir = st.text_input("Terkib klasörü", value=auto_terkib_dir or "data/terkib", help="Örn: data/terkib")
 
-with st.sidebar.expander("Tanılama", expanded=False):
-    cwd = Path.cwd()
-    st.write("Çalışma dizini:", str(cwd))
-
 # ---------- Tabs ----------
 tab1, tab2 = st.tabs(["Makamlar", "Terkibler"])
 
@@ -118,19 +121,60 @@ with tab1:
     if not files:
         st.error("Makam dosyaları bulunamadı. (data/makam altında .json olmalı)")
     else:
+        # Build display list by reading Ad from JSON (once per run)
+        entries = []
+        for fn in files:
+            path = os.path.join(makam_dir, fn)
+            try:
+                d = load_json(path)
+                ad = d.get("Ad", fn)
+            except Exception:
+                ad = fn
+            entries.append({"label": f"{ad} ({fn})", "ad": ad, "fn": fn})
+
         q = st.text_input("Ara (makam adı):", value="")
-        filtered = [f for f in files if q.lower() in f.lower()] if q else files
-        selected = st.selectbox("Makam seç:", filtered, index=0)
-        data = load_json(os.path.join(makam_dir, selected))
-        render_makam(data)
+        if q:
+            nq = norm(q)
+            filtered = [e for e in entries if nq in norm(e["ad"]) or nq in norm(e["fn"])]
+        else:
+            filtered = entries
+
+        if not filtered:
+            st.warning("Arama sonucu bulunamadı. Arama kutusunu temizleyip tekrar deneyin.")
+        else:
+            labels = [e["label"] for e in filtered]
+            choice = st.selectbox("Makam seç:", labels, index=0)
+            selected_fn = next(e["fn"] for e in filtered if e["label"] == choice)
+            data = load_json(os.path.join(makam_dir, selected_fn))
+            render_makam(data)
 
 with tab2:
     files = list_json_files(terkib_dir)
     if not files:
         st.warning("Henüz terkip dosyası yok.")
     else:
+        entries = []
+        for fn in files:
+            path = os.path.join(terkib_dir, fn)
+            try:
+                d = load_json(path)
+                ad = d.get("Ad", fn)
+            except Exception:
+                ad = fn
+            entries.append({"label": f"{ad} ({fn})", "ad": ad, "fn": fn})
+
         q = st.text_input("Ara (terkib adı):", value="", key="terkib_search")
-        filtered = [f for f in files if q.lower() in f.lower()] if q else files
-        selected = st.selectbox("Terkib seç:", filtered, index=0, key="terkib_select")
-        data = load_json(os.path.join(terkib_dir, selected))
-        render_terkib(data)
+        if q:
+            nq = norm(q)
+            filtered = [e for e in entries if nq in norm(e["ad"]) or nq in norm(e["fn"])]
+        else:
+            filtered = entries
+
+        if not filtered:
+            st.warning("Arama sonucu bulunamadı. Arama kutusunu temizleyip tekrar deneyin.")
+        else:
+            labels = [e["label"] for e in filtered]
+            choice = st.selectbox("Terkib seç:", labels, index=0, key="terkib_select")
+            selected_fn = next(e["fn"] for e in filtered if e["label"] == choice)
+            data = load_json(os.path.join(terkib_dir, selected_fn))
+            render_terkib(data)

@@ -7,13 +7,17 @@ st.set_page_config(page_title="Nasır Dede – Makam & Terkib", layout="wide")
 st.title("Abdülbaki Nasır Dede – Tedkîk u Tahkîk")
 st.caption("17’li sistem · Makam & Terkib veri seti")
 
+st.markdown("""
+Bu uygulama, Abdülbaki Nasır Dede’nin *Tedkîk u Tahkîk* risalesine göre
+(17’li sistem) **makam** ve **terkib** verilerini görüntüler.
+""")
+
 # --- Diagnostics ------------------------------------------------------------
 with st.expander("Tanılama (repo dizini ve dosya ağacı)", expanded=False):
     cwd = Path.cwd()
     st.write("Çalışma dizini:", str(cwd))
 
-    # Show first 2 levels of tree (avoid huge output)
-    def tree(root: Path, max_depth: int = 2):
+    def tree(root: Path, max_depth: int = 3):
         lines = []
         root = root.resolve()
         for p in sorted(root.rglob("*")):
@@ -25,6 +29,7 @@ with st.expander("Tanılama (repo dizini ve dosya ağacı)", expanded=False):
             if depth <= max_depth:
                 lines.append(f"{'  '*(depth-1)}- {rel.as_posix()}{'/' if p.is_dir() else ''}")
         return "\n".join(lines) if lines else "(boş)"
+
     st.code(tree(cwd, max_depth=3), language="text")
 
 # --- Helpers ----------------------------------------------------------------

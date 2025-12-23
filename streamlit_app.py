@@ -7,16 +7,22 @@ st.set_page_config(page_title="Nasır Dede – Makam & Terkib", layout="wide")
 st.title("Abdülbaki Nasır Dede – Tedkîk u Tahkîk")
 st.caption("17’li sistem · Makam & Terkib veri seti")
 
-# Paths
-MAKAM_DIR = "data/makam"
-TERKIB_DIR = "data/terkib"
+def find_dir(target):
+    """Search for target directory starting from repo root."""
+    for root, dirs, files in os.walk(os.getcwd()):
+        if target in dirs:
+            return os.path.join(root, target)
+    return None
+
+MAKAM_DIR = find_dir("makam")
+TERKIB_DIR = find_dir("terkib")
 
 tab1, tab2 = st.tabs(["Makamlar", "Terkibler"])
 
 with tab1:
     st.subheader("Makamlar")
-    if not os.path.exists(MAKAM_DIR):
-        st.error("data/makam klasörü bulunamadı.")
+    if not MAKAM_DIR:
+        st.error("makam klasörü bulunamadı (repo içinde aranamadı).")
     else:
         files = sorted([f for f in os.listdir(MAKAM_DIR) if f.endswith(".json")])
         if not files:
@@ -30,8 +36,8 @@ with tab1:
 
 with tab2:
     st.subheader("Terkibler")
-    if not os.path.exists(TERKIB_DIR):
-        st.error("data/terkib klasörü bulunamadı.")
+    if not TERKIB_DIR:
+        st.error("terkib klasörü bulunamadı (repo içinde aranamadı).")
     else:
         files = sorted([f for f in os.listdir(TERKIB_DIR) if f.endswith(".json")])
         if not files:
